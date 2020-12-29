@@ -69,28 +69,77 @@ function Test-DLDromEmails {
     }
 
     Process{
-          #how to make it possible to check if find the email address but if does not
-            #retrun the firts and last name, cehcek it in ad and the offer it as solution
+         #trim the input 
+
+        #$Groupmembers = foreach($i in $Groupmembers) {$i.trim(" ")}
+
+                      #VAlidates the email addresses against the AD 
+
+                                
+
+                    # $ValidGroupmembers =  foreach($member in $Groupmembers) {foreach($Domain in $CustomDomains)
+
+                    #      { Get-ADUser   -Server  $Domain     -f{mail -like  $member}  -pro * | select mail | % {$_.Psobject.properties.value} }}
+
+                    $ValidGroupmembers =  @()
+
+                    foreach($member in $Groupmembers) { foreach($Domain in $CustomDomains)
+
+                            { 
+
+                                $ValidMember = Get-ADUser   -Server  $Domain     -f{mail -like  $member}  -pro * | select mail | % {$_.Psobject.properties.value};
+
+                                $ValidGroupmembers += $ValidMember}}
+
+                                     
+
+                                    
+
+                     # if it was not able to find the email address  it wont be in the VAlidgroupmembers array. Comparing the two arrays and assigning it to a new one          
+
+                    $InvalidGroupMembers = compare $ValidGroupmembers $Groupmembers -PassThru
 
 
-            # checks for the emailaddress in ad.
-                    #when it finds it, it returns it
-                    #when does not splits the emailaddress to dirst and last name and tries to find it
-                                #when it does not find it on the default server it takes the provided custom servers.
-            for($i = 0; $i -le $CustomDomains.Length; $i++) {
-                $CustomDomains = 'dummydomain', 'dummydomain'
-                $CurrentDomain = $CustomDomains[$i]
-                $CurrentMember = $Groupmembers[$i]
-                $GivenName = $CurrentMember.Replace('@', '.').Split('.')[0]
-                $SurName = $CurrentMember.Replace('@', '.').Split('.')[1]        
-                #if (
-                    write-host $CustomDomains[$i]
-                    Get-ADUser -Server   $CustomDomains[$i] -f{mail -like $CurrentMember} 
-                    #) {
-                    #write-host $CurrentMember
-                 #   }
-      #              else {for($i = 0; $i -le  $CustomDomains.Length; $i++){Get-ADUser -server $CurrentDomain -Filter{SurName -like $SurName} -pro * | where {$_.$GivenName -like $GivenName}  | select mail}
-                    #      }
+
+                    $ValidGroupmembers  =  foreach($member in $ValidGroupmembers) {" $member;"}
+
+                    Write-Output "The Valid mail addresses:"
+
+                        $ValidGroupmembers
+
+                                
+
+
+
+                      # One way to find these users is by finding them by name. First we get the name by spliting
+
+                    $offers = @()
+
+                    foreach ($InValidMember in $InvalidGroupMembers) {
+
+                            $GivenName = $InValidMember.Replace('@', '.').Split('.')[0]; 
+
+                            $SurName = $InValidMember.Replace('@', '.').Split('.')[1];
+
+                            
+
+                            foreach($Domain in $CustomDomains)  
+
+                                        {$offer = Get-ADUser -server $Domain -Filter{SurName -like $SurName} -pro * | where {$_.GivenName -like $GivenName}  | select mail | % {$_.Psobject.properties.value; $offers += $offer}}}
+
+                    Write-Host: "Incorrect emails have been found. Based on first and last name these are the suggestions:" 
+
+                    $offers
+
+
+
+            
+
+                     #   foreach($Domain in $CustomDomains)
+
+                     #           {$Membersuggestion = Get-ADUser -server $Domain -Filter{SurName -like $SurName} -pro *| where {$_.GivenName -like $GivenName } | select mail | % {$_.psobject.properties.value}
+
+                     #             Write-Host "  $Membersuggestion" }
                         
                                                             }
             
