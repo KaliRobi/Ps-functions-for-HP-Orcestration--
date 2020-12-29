@@ -45,37 +45,61 @@ function Test-DLDromEmails {
       # all the rest attributum of the dl is extracted
       # may beneficial to add quantity based behaviour flow. if something is empty that part wont run          
               
+            
+
             $Editor = @()
+
             foreach($item in $NewTemplate.GetEnumerator()) {
+
                 $Editor += "$($item.Editor) $($item.value)"
+
             }
+
+            $Editor = foreach($i in $Editor) {$i.trim(" ")}
+
+
 
             $Groupmembers = @()
+
             foreach($item in $NewTemplate.GetEnumerator()) {
+
                 $Groupmembers += "$($item.Groupmembers) $($item.value)"
+
             }
 
+            $Groupmembers = foreach($i in $Groupmembers) {$i.trim(" ")}
+
+
+
             $SenderScope = @()
+
             foreach ($item in $NewTemplate.GetEnumerator()) { 
+
                  $SenderScope += "$($item.SenderScope) $($item.value)"
+
             }
+
+            $SenderScope= foreach($i in $SenderScope) {$i.trim(" ")}
+
 
 
             $PrimarySmtpAddress = @()
+
             foreach ($item in $NewTemplate.GetEnumerator()) {
+
                 $PrimarySmtpAddress += "$($item.PrimarySmtpAddress) $($item.value)"
-                
+
             }    
+
+            $PrimarySmtpAddress = foreach($i in $PrimarySmtpAddress) {$i.trim(" ")}
+
     }
 
+
+
+
     Process{
-         #trim the input 
-
-        #$Groupmembers = foreach($i in $Groupmembers) {$i.trim(" ")}
-
-                      #VAlidates the email addresses against the AD 
-
-                                
+                                    
 
                     # $ValidGroupmembers =  foreach($member in $Groupmembers) {foreach($Domain in $CustomDomains)
 
