@@ -1,5 +1,5 @@
-# Ps-functions-for-HP-Orcestrator
-Creating Distribution List with the HP orchestrator does not allow tests which causes many failed attempts while the analyst needs to stay until the script runs to be sure that the task is done.   
+# Ps-functions-for-HP-Orcestration
+Creating Distribution List with thore HP orchestrator does not allow tests which causes many failed attempts while the analyst needs to stay until the script runs to be sure that the task is done.   
 
   
 
